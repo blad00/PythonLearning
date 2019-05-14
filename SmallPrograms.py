@@ -18,6 +18,7 @@ for w in words[:]:  # Loop over a slice copy of the entire list.
     if len(w) > 6:
         words.insert(0, w)
 
+
 a = ['Mary', 'had', 'a', 'little', 'lamb']
 for i in range(len(a)):
     print i, a[i]
