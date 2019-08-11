@@ -7,11 +7,13 @@ text = "# This is not a comment because it's inside quotes."
 
 str = u'Hello\u0020World !'
 
+
 print(str)
 
 print('hello worldaaaa')
 
-print r'C:\some\name'
+
+print('C:\some\name')
 
 text = ('Put several strings within parentheses '
         'to have them joined together.')
@@ -28,7 +30,6 @@ a = ['a', 'b', 'c']
 
 # Matrix or  list of lists
 n = [1, 2, 3]
-x = [a, n]
 x = [a, n]
 
 print(x[0][1])
