@@ -288,5 +288,27 @@ for i in range(4):
 list(zip(*matrix))
 
 #5.2. The del statement
+a = [-1, 1, 66.25, 333, 333, 1234.5]
+del a[0]
+del a[2:4]
+del a[:]
+a
+del a
 
+#5.3. Tuples and Sequences
+t = 12345, 54321, 'hello!'
+t[0]
+t
+u = t, (1, 2, 3, 4, 5)
+u
+v = ([1, 2, 3], [3, 2, 1])
+v[0][0] = 10
 
+#empty or one size tuple
+empty = ()
+singleton = 'hello',
+len(empty)
+len(singleton)
+singleton
+x, y, z = t
+#5.4. Sets
