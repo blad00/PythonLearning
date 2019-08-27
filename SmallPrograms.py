@@ -311,4 +311,74 @@ len(empty)
 len(singleton)
 singleton
 x, y, z = t
+
 #5.4. Sets
+# no duplicates allowed
+basket = {'apple', 'orange', 'apple', 'pear', 'orange', 'banana'}
+print(basket)
+'orange' in basket
+'crabgrass' in basket
+a = set('abracadabra')
+b = set('alacazam')
+a
+b
+a - b                              # letters in a but not in b
+a | b                              # letters in a or b or both
+a & b                              # letters in both a and b
+a ^ b                              # letters in a or b but not both
+a = {x for x in 'abracadabra' if x not in 'abc'} # set comprehensions are also supported
+a
+
+#5.5. Dictionaries -- dictionaries are indexed by keys
+tel = {'jack': 4098, 'sape': 4139}
+tel['guido'] = 4127
+tel
+tel['jack']
+del tel['sape']
+tel['irv'] = 4127
+list(tel.keys())
+sorted(tel.keys())
+'guido' in tel
+'jack' not in tel
+we = dict([('sape', 4139), ('guido', 4127), ('jack', 4098)])
+{x: x**2 for x in (2, 4, 6)}
+dict(sape=4139, guido=4127, jack=4098)
+
+#5.6. Looping Techniques
+knights = {'gallahad': 'the pure', 'robin': 'the brave'}
+for k, v in knights.items():
+    print(k, v)
+
+for i, v in enumerate(['tic', 'tac', 'toe']):
+    print(i, v)
+
+questions = ['name', 'quest', 'favorite color']
+answers = ['lancelot', 'the holy grail', 'blue']
+for q, a in zip(questions, answers):
+    print('What is your {0}?  It is {1}.'.format(q, a))
+
+for i in reversed(range(1, 10, 2)):
+    print(i)
+
+basket = ['apple', 'orange', 'apple', 'pear', 'orange', 'banana']
+for f in sorted(set(basket)):
+    print(f)
+
+import math
+raw_data = [56.2, float('NaN'), 51.7, 55.3, 52.5, float('NaN'), 47.8]
+filtered_data = []
+for value in raw_data:
+    if not math.isnan(value):
+        filtered_data.append(value)
+
+filtered_data
+
+(1, 2, 3)< (1, 2, 4)
+'ABC' < 'C' < 'Pascal' < 'Python'
+(1, 2, 3, 4)< (1, 2, 4)
+
+## delete everything
+for name in dir():
+    if not name.startswith('_'):
+        del globals()[name]
+del name
