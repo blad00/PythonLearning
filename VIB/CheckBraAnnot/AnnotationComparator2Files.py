@@ -1,9 +1,9 @@
 import os
 import glob
 
-with open("/home/dacru/Midas/research/deepseq/ngsproject_brassica/Annotation2020TRAPID/Results/Plaza4BrassicaComparison.tsv", "w") as outfile:
+with open("D:\DanielVIB\Brassica\Annotation2020TRAPID\Results\Plaza4BrassicaComparison3Exp.tsv", "w") as outfile:
 
-	path = "/home/dacru/Midas/research/deepseq/ngsproject_brassica/Annotation2020TRAPID/Results/"
+	path = "D:\DanielVIB\Brassica\Annotation2020TRAPID\Results\\"
 
 	annotsCounts = {}
 	countFiles = 0
