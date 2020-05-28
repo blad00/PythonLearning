@@ -4,62 +4,19 @@ class BraEspc:
 
     def __init__(self, name):
         self.branuName = name    # instance variable unique to each instance
-        self.listRapa = []
-        self.listOle = []
+        self.listRapa = ""
+        self.listOle = ""
         self.listAthOtho = []
 
     def add_rapa(self, rapaGene):
-        self.listRapa.append(rapaGene)
+        self.listRapa = rapaGene
 
     def add_ole(self, oleGene):
-        self.listOle.append(oleGene)
+        self.listOle = oleGene
 
     def add_ortho(self, orthoGene):
         self.listAthOtho.append(orthoGene)
 
-#program it self
-
-#Test
-# simil = "D:\DanielVIB\Brassica\Annotation2020TRAPID\Results\OrgDown\integrative_orthology_files\similarities_1285.dump_head.tsv"
-# output = "D:\DanielVIB\Brassica\Annotation2020TRAPID\Results\OrgDown\integrative_orthology_files\BraNapus_ArabiOrtholog.tsv"
-
-simil = "D:\DanielVIB\Brassica\Annotation2020TRAPID\Results\OrgDown\integrative_orthology_files\Syntenic\SynteniListChalhoub.tsv"
-output = "D:\DanielVIB\Brassica\Annotation2020TRAPID\Results\OrgDown\integrative_orthology_files\Syntenic\AthOrthoFromSynteniListChalhoub.tsv"
-
-similFile = open(simil, "r")
-# skip header
-next(similFile)
-
-outputFile = open(output, 'w')
-#whole list of branu genes
-listBranus = []
-
-#main loop over the simil file
-for line in similFile:
-
-    fields = line.split("\t")
-    geneNameBranu = fields[0]
-    #create branu object
-    branu = BraEspc(geneNameBranu)
-
-    matches = fields[1].split(";")
-    #second loop over the matches details
-    for matchInfo in matches:
-        matchDetails = matchInfo.split(",")
-        matchGene = matchDetails[0]
-        if matchGene.startswith("Brara") and matchGene not in branu.listRapa:
-            branu.add_rapa(matchGene)
-        elif matchGene.startswith("Bo") and matchGene not in branu.listOle:
-            branu.add_ole(matchGene)
-    #add the branu gene to the list
-    listBranus.append(branu)
-
-# for curBranu in listBranus:
-#     print(curBranu.branuName)
-#     print(curBranu.listOle)
-#     print(curBranu.listRapa)
-
-similFile.close()
 
 #now load othofiles
 
@@ -159,14 +116,74 @@ for line in trogFile:
 
 trogFile.close()
 
-# Searching ortho in at leat 2 integrative orthofile
+#Load conversion table for RAPA
+
+converRapaTable = "D:\DanielVIB\Brassica\Annotation2020TRAPID\Results\OrgDown\RapaWork\corrRapaTable.tsv"
+
+#read ortho files and skip heads
+converRapaTableFile = open(converRapaTable, "r")
+
+convRapaMap = {}
+
+for line in converRapaTableFile:
+    fields = line.split("\t")
+    convRapaMap[fields[1].rstrip()] = fields[0]
+
+converRapaTableFile.close()
+
+
+#program it self
+
+simil = "D:\DanielVIB\Brassica\Annotation2020TRAPID\Results\OrgDown\integrative_orthology_files\Syntenic\SynteniListChalhoub.tsv"
+output = "D:\DanielVIB\Brassica\Annotation2020TRAPID\Results\OrgDown\integrative_orthology_files\Syntenic\AthOrthoFromSynteniListChalhoub.tsv"
+
+similFile = open(simil, "r")
+# skip header
+next(similFile)
+
+outputFile = open(output, 'w')
+#whole list of branu genes
+listBranus = []
+
+#main loop over the simil file
+for line in similFile:
+
+    fields = line.split("\t")
+
+    if fields[2] == ".":
+        geneNameBranu = fields[3].rstrip()
+    else:
+        geneNameBranu = fields[2].rstrip()
+
+
+    #create branu object
+    branu = BraEspc(geneNameBranu)
+
+    #add synteni Ore, for rapa first convert and then add
+    branu.add_ole(fields[1])
+
+    braVer4 = convRapaMap.get(fields[0])
+    if braVer4 is not None:
+        branu.add_rapa(braVer4)
+
+    #add the branu gene to the list
+    listBranus.append(branu)
+
+
+similFile.close()
+
+
+
+# Searching ortho in integrative orthofiles
 
 #current Brassica napus gene
 for curBranu in listBranus:
     outputFile.write(curBranu.branuName)
 
     #iterate over list of Rapa similarities
-    for rapMatch in curBranu.listRapa:
+    rapMatch = curBranu.listRapa
+    if rapMatch != "":
+
         matchArabiCounts = {}
         # 1 check in anchor list of orthologs
         if rapMatch in anchorMap:
@@ -209,7 +226,9 @@ for curBranu in listBranus:
             outputFile.write("\t"+rapMatch+","+arabiKey+","+str(cont))
 
     #iterate over list of Oleracea similarities
-    for oleMatch in curBranu.listOle:
+    oleMatch = curBranu.listOle
+    if oleMatch != "":
+
         matchArabiCounts = {}
         # 1 check in anchor list of orthologs
         if oleMatch in anchorMap:
@@ -251,19 +270,8 @@ for curBranu in listBranus:
 #            if cont >= 2:
             outputFile.write("\t"+oleMatch+","+arabiKey+","+str(cont))
 
-
-
     outputFile.write("\n")
 
-
-
-
-#printing
-# for gene in genes:
-#     outputFile.write(gene)
-#     for cont in trogMap[gene]:
-#         outputFile.write("\t"+cont)
-#     outputFile.write("\n")
 
 outputFile.close()
 
