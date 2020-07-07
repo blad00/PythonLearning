@@ -32,9 +32,9 @@ def main():
 	for f in files:
 		if f['type'] == 'folder':
 			continue # do nothing, try next
-
-		if itemp == 31:
-			break
+		#initial set
+		#if itemp == 31:
+		#	break
 
 		#print ("Name " + f['name'])
 
@@ -42,6 +42,8 @@ def main():
 		#print replicate
 		if replicate == '1':
 			itemp = itemp+1
+			if not (itemp >= 71 and itemp <= 92):
+				continue
 			base=f['name'].split('_')[:-1]
 			#print base
 			forward_name=f['name']
