@@ -5,7 +5,7 @@ gene = input()
 while gene != 'x':
 
     #declare output file
-    output = "D:\DanielVIB\Brassica\ModelsValitationTrial1\\"+gene+".tsv"
+    output = "D:\DanielVIB\Brassica\ModelsValitationTrial1_TF\\"+gene+".tsv"
     outputFile = open(output, 'w')
 
     print("get annotations")

@@ -1,3 +1,26 @@
+'''
+import sys
+
+if len(sys.argv) != 2:
+    raise ValueError('Please provide email-id to send the email.')
+
+print(f'Script Name is {sys.argv[0]}')
+
+email = sys.argv[1]
+
+print(f'Sending test email to {email}')
+
+$ python3.7 command-line-args.py test@askpython.com
+Script Name is command-line-args.py
+Sending test email to test@askpython.com
+$ python3.7 command-line-args.py
+Traceback (most recent call last):
+  File "command-line-args.py", line 4, in <module>
+    raise ValueError('Please provide email-id to send the email.')
+ValueError: Please provide email-id to send the email.
+$
+'''
+
 # x = int(raw_input("Please enter an integer: "))
 x = 1
 if x < 0:
