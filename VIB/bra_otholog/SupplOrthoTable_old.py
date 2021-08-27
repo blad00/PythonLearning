@@ -155,72 +155,12 @@ map_b_ath[ortho_tmp.name()] = ortho_tmp
 ath_ortho.close()
 
 
-#load arabidopsis info
-arab_id_file = "D:\DanielVIB\Brassica\Annotation2020TRAPID\AnnotStevenFolder\PLAZA_ATH\id_conversion.ath.csv"
-arab_desc_file = "D:\DanielVIB\Brassica\Annotation2020TRAPID\AnnotStevenFolder\PLAZA_ATH\gene_description.ath.csv"
-
-# ids
-with open(arab_id_file, "r") as arab_id:
-
-	arab_tmp = None
-
-	map_ara_info = {}
-
-	# Skip initial comments that starts with #
-	while True:
-		line = arab_id.readline()
-		# break while statement if it is not a comment line
-		# i.e. does not startwith #
-		if not line.startswith('#'):
-			break
-
-	# Second while loop to process the rest of the file
-	while line:
-		fields = line.rstrip().split("\t")
-		if fields[1] == "name" or fields[1] == "Alias" or fields[1] == "symbol" or fields[1] == "full_name":
-			# check if we already have that gene
-			if fields[0] in map_ara_info:
-				arab_tmp = map_ara_info.get(fields[0])
-				arab_tmp = arab_tmp+"||"+fields[2]
-				map_ara_info[fields[0]] = arab_tmp
-			else:
-				map_ara_info[fields[0]] = fields[2]
-		line = arab_id.readline()
-
-#descriptions
-with open(arab_desc_file, "r") as arab_desc:
-
-	arab_tmp = None
-
-	# Skip initial comments that starts with #
-	while True:
-		line = arab_desc.readline()
-		# break while statement if it is not a comment line
-		# i.e. does not startwith #
-		if not line.startswith('#'):
-			break
-
-	# Second while loop to process the rest of the file
-	while line:
-		fields = line.rstrip().split("\t")
-		if fields[1] == "description":
-			# check if we already have that gene
-			if fields[0] in map_ara_info:
-				arab_tmp = map_ara_info.get(fields[0])
-				arab_tmp = arab_tmp+"\t"+fields[2]
-				map_ara_info[fields[0]] = arab_tmp
-			else:
-				map_ara_info[fields[0]] = "\t"+fields[2]
-		line = arab_desc.readline()
-
-
 #iterate over the map of bnapus genes for final report
 
-outputFile = "D:\DanielVIB\Brassica\Annotation2020TRAPID\AnnotStevenFolder\\report33.tsv"
+outputFile = "D:\DanielVIB\Brassica\Annotation2020TRAPID\AnnotStevenFolder\\report22.tsv"
 output = open(outputFile, 'w')
 
-output.write(f"B. napus gene\tB.rapa/oleracea candidate ortholog\tevidence\tA.Th candidate ortholog\t"
-			 f"#Integrative sources\t#supported Ath Ortholog\tA.Th alternative name\tA.Th gene description\n")
+output.write(f"B. napus gene\tB.rapa/oleracea candidate ortholog\tevidence\tA.th candidate ortholog\t#Integrative sources\t#supported Ath Ortholog\tA.th alternative name\tA.th gene description\n")
 
 keys_bnapus = list(map_bnapus.keys())
 keys_bnapus.sort()
@@ -240,12 +180,12 @@ for key_bna in keys_bnapus:
 	elif len(branu.CS()) > 0:
 		re_list = branu.CS()
 		str_evi_winner = "CS"
-	elif len(branu.CT_ST()) > 0:
-		re_list = branu.CT_ST()
-		str_evi_winner = "CT/ST"
 	elif len(branu.C_S()) > 0:
 		re_list = branu.C_S()
 		str_evi_winner = "C/S"
+	elif len(branu.CT_ST()) > 0:
+		re_list = branu.CT_ST()
+		str_evi_winner = "CT/ST"
 	elif len(branu.T()) > 0:
 		re_list = branu.T()
 		str_evi_winner = "T"
@@ -263,53 +203,29 @@ for key_bna in keys_bnapus:
 
 
 	#print(key_bna)
-	#select the winner
-
+	#slect the winner
 	for b_ortho in re_list:
 		a_ortho = map_b_ath.get(b_ortho)
+		ath_name = a_ortho.name()
 		if len(a_ortho.list_4_int()) > 0:
+			list_ath = a_ortho.list_4_int()
 			num_list = 4
 		elif len(a_ortho.list_3_int()) > 0:
+			list_ath = a_ortho.list_3_int()
 			num_list = 3
 		elif len(a_ortho.list_2_int()) > 0:
+			list_ath = a_ortho.list_2_int()
 			num_list = 2
 		elif len(a_ortho.list_1_int()) > 0:
+			list_ath = a_ortho.list_1_int()
 			num_list = 1
 
 		if num_list > num_list_winner:
 			num_list_winner = num_list
+			list_ath_winner = list_ath
+			ath_name_winner = ath_name
 
-
-	for b_ortho in re_list:
-		a_ortho = map_b_ath.get(b_ortho)
-		ath_name = a_ortho.name()
-		if num_list_winner == 4 and len(a_ortho.list_4_int()) > 0:
-			list_ath_winner = a_ortho.list_4_int()
-			arab_desc = map_ara_info.get(list_ath_winner[0])
-			output.write(f"{key_bna}\t{a_ortho.name()}\t{str_evi_winner}\t{list_ath_winner[0]}\t"
-						 f"{num_list_winner}\t{len(list_ath_winner)}\t{arab_desc}\n")
-
-		elif num_list_winner == 3 and len(a_ortho.list_3_int()) > 0:
-			list_ath_winner = a_ortho.list_3_int()
-			arab_desc = map_ara_info.get(list_ath_winner[0])
-			output.write(f"{key_bna}\t{a_ortho.name()}\t{str_evi_winner}\t{list_ath_winner[0]}\t"
-						 f"{num_list_winner}\t{len(list_ath_winner)}\t{arab_desc}\n")
-
-
-		elif num_list_winner == 2 and len(a_ortho.list_2_int()) > 0:
-			list_ath_winner = a_ortho.list_2_int()
-			arab_desc = map_ara_info.get(list_ath_winner[0])
-			output.write(f"{key_bna}\t{a_ortho.name()}\t{str_evi_winner}\t{list_ath_winner[0]}\t"
-						 f"{num_list_winner}\t{len(list_ath_winner)}\t{arab_desc}\n")
-
-
-		elif num_list_winner == 1 and len(a_ortho.list_1_int()) > 0:
-			list_ath_winner = a_ortho.list_1_int()
-			arab_desc = map_ara_info.get(list_ath_winner[0])
-			output.write(f"{key_bna}\t{a_ortho.name()}\t{str_evi_winner}\t{list_ath_winner[0]}\t"
-						 f"{num_list_winner}\t{len(list_ath_winner)}\t{arab_desc}\n")
-
+	output.write(f"{key_bna}\t{ath_name_winner}\t{str_evi_winner}\t{list_ath_winner[0]}\t{num_list_winner}\t{len(list_ath_winner)}\n")
 
 
 output.close()
-
