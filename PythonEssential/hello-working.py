@@ -179,10 +179,11 @@ print(id(x[0]))
 print(id(y[0]))
 
 if x[0] is y[0]:
-if x is y:
-	print("yep")
-else:
-	print("nope")
+
+	if x is y:
+		print("yep")
+	else:
+		print("nope")
 
 if isinstance(x, tuple):
 	print("yep")
@@ -315,7 +316,7 @@ try:
 	if numargs > 2:
 		raise TypeError(f"excpected less than {numargs}")
 except TypeError as e:
-	print((f"error mio: {e}")
+	print((f"error mio: {e}"))
 
 
 #String
